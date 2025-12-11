@@ -4,7 +4,7 @@ const Project = require("../models/Project");
 
 router.post("/", async (req, res) => {
   try {
-    const { img, title, role, info, link } = req.body;
+    const { img, title, role, info, link, stage, progress } = req.body;
 
     const newProject = new Project({
       img,
@@ -12,7 +12,12 @@ router.post("/", async (req, res) => {
       role,
       info,
       link,
+      // stage: stage || "Completed",
+      // progress: stage === "Completed" ? 100 : progress || 50,
+      stage,
+      progress,
     });
+
     await newProject.save();
 
     res
