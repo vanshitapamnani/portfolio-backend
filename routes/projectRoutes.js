@@ -2,10 +2,6 @@ const express = require("express");
 const router = express.Router();
 const Project = require("../models/Project");
 
-router.delete("/test", (req, res) => {
-  res.json({ message: "DELETE route works" });
-});
-
 router.post("/", async (req, res) => {
   try {
     const { img, title, role, info, link, stage, progress } = req.body;
@@ -42,11 +38,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// router.delete("/:id", async (req, res) => {
-//   console.log("🔥 DELETE ROUTE HIT");
-//   console.log("ID:", req.params.id);
-//   return res.status(200).json({ message: "DELETE route works" });
-// });
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -57,6 +48,32 @@ router.delete("/:id", async (req, res) => {
     res.status(200).json({ message: "Project deleted Successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error in deleting project", error });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { img, title, role, info, link, stage, progress } = req.body;
+
+    //find project by ID and update it
+    const updatedProject = await Project.findByIdAndUpdate(
+      id,
+      { img, title, role, info, link, stage, progress },
+      { new: true },
+    );
+    if (!updatedProject) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    res
+      .status(200)
+      .json({
+        message: "Project updated successfully",
+        project: updatedProject,
+      });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating project", error });
   }
 });
 
