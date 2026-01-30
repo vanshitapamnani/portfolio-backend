@@ -66,15 +66,26 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    res
-      .status(200)
-      .json({
-        message: "Project updated successfully",
-        project: updatedProject,
-      });
+    res.status(200).json({
+      message: "Project updated successfully",
+      project: updatedProject,
+    });
   } catch (error) {
     res.status(500).json({ message: "Error updating project", error });
   }
+});
+
+router.post("/verify", (req, res) => {
+  const { password } = req.body;
+
+  if (!password) {
+    return res.status(400).json({ message: "Password required" });
+  }
+  if (password === process.env.ADMIN_PASSWORD) {
+    return res.status(200).json({ success: true });
+  }
+
+  return res.send(401).json({ success: false, message: "Invalid Password" });
 });
 
 module.exports = router;
