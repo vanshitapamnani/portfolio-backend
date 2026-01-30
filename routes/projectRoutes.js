@@ -86,7 +86,7 @@ router.post("/verify", (req, res) => {
     return res.status(200).json({ success: true });
   }
 
-  return res.send(401).json({ success: false, message: "Invalid Password" });
+  return res.status(401).json({ success: false, message: "Invalid Password" });
 });
 
 module.exports = router;
