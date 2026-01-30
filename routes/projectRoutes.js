@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Project = require("../models/Project");
+require("dotenv").config();
 
 router.post("/", async (req, res) => {
   try {
