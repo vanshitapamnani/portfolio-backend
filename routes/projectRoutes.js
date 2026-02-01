@@ -77,16 +77,29 @@ router.put("/:id", async (req, res) => {
 });
 
 router.post("/verify", (req, res) => {
-  const { password } = req.body;
+  try {
+    const { password } = req.body;
 
-  if (!password) {
-    return res.status(400).json({ message: "Password required" });
-  }
-  if (password === process.env.ADMIN_PASSWORD) {
-    return res.status(200).json({ success: true });
-  }
+    if (!password) {
+      return res.status(400).json({ message: "Password required" });
+    }
+    if (!process.env.ADMIN_PASSWORD) {
+      return res
+        .status(500)
+        .json({ message: "ADMIN_PASSWORD not set on server" });
+    }
 
-  return res.status(401).json({ success: false, message: "Invalid Password" });
+    if (password.trim() === process.env.ADMIN_PASSWORD.trim()) {
+      return res.status(200).json({ success: true });
+    }
+
+    return res
+      .status(401)
+      .json({ success: false, message: "Invalid Password" });
+  } catch (err) {
+    console.error("VERIFY ERROR:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
 });
 
 module.exports = router;
