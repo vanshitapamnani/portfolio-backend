@@ -76,30 +76,37 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// router.post("/verify", (req, res) => {
+//   try {
+//     const { password } = req.body;
+
+//     if (!password) {
+//       return res.status(400).json({ message: "Password required" });
+//     }
+//     if (!process.env.ADMIN_PASSWORD) {
+//       return res
+//         .status(500)
+//         .json({ message: "ADMIN_PASSWORD not set on server" });
+//     }
+
+//     if (password.trim() === process.env.ADMIN_PASSWORD.trim()) {
+//       return res.status(200).json({ success: true });
+//     }
+
+//     return res
+//       .status(401)
+//       .json({ success: false, message: "Invalid Password" });
+//   } catch (err) {
+//     console.error("VERIFY ERROR:", err);
+//     return res.status(500).json({ message: "Server error" });
+//   }
+// });
 router.post("/verify", (req, res) => {
-  try {
-    const { password } = req.body;
+  console.log("BODY:", req.body);
 
-    if (!password) {
-      return res.status(400).json({ message: "Password required" });
-    }
-    if (!process.env.ADMIN_PASSWORD) {
-      return res
-        .status(500)
-        .json({ message: "ADMIN_PASSWORD not set on server" });
-    }
-
-    if (password.trim() === process.env.ADMIN_PASSWORD.trim()) {
-      return res.status(200).json({ success: true });
-    }
-
-    return res
-      .status(401)
-      .json({ success: false, message: "Invalid Password" });
-  } catch (err) {
-    console.error("VERIFY ERROR:", err);
-    return res.status(500).json({ message: "Server error" });
-  }
+  return res.status(200).json({
+    receivedPassword: req.body.password,
+    envPassword: process.env.ADMIN_PASSWORD,
+  });
 });
-
 module.exports = router;
